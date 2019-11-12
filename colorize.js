@@ -44,10 +44,25 @@ function copy() {
 }
 
 $( document ).ready( function() {
-	scalarapi.setBook( "https://scalar.fas.harvard.edu/cole---test-book" );
+	var thisBookUrl = window.location.href;
+	var thisPageSlug = window.location.pathname.split("/").pop();
+	console.log(thisBookUrl);
+	console.log(thisPageSlug);
 
-	if ( scalarapi.loadNode( "russian-test-2", true, handleSuccess, handleFailure) == "loaded" ) {
-		handleSuccess();
+	if(thisBookUrl.includes("scalar.fas.harvard.edu")){
+		console.log(`Scalar API book url set to {thisBookUrl}`);
+		scalarapi.setBook(thisBookUrl);
+	} else {
+		console.log("Scalar API book url - default book");
+		scalarapi.setBook( "https://scalar.fas.harvard.edu/cole---test-book" );
+	}
+
+	// if ( scalarapi.loadNode( "russian-test-2", true, handleSuccess, handleFailure) == "loaded" ) {
+	// 	// handleSuccess();
+	// };
+
+	if ( scalarapi.loadNode( thisPageSlug, true, handleSuccess, handleFailure) == "loaded" ) {
+		// handleSuccess();
 	};
 
 	async function processHtml(content){
@@ -57,7 +72,7 @@ $( document ).ready( function() {
 
 	function handleSuccess() {
 		console.log("Node loaded.")
-		var node = scalarapi.getNode( "russian-test-2" );
+		var node = scalarapi.getNode( thisPageSlug );
 		var content = node.versions[0].content;
 		var promise = processHtml(content);
 		var colorized;
