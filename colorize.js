@@ -50,7 +50,7 @@ $( document ).ready( function() {
 	console.log(thisPageSlug);
 
 	if(thisBookUrl.includes("scalar.fas.harvard.edu")){
-		console.log(`Scalar API book url set to {thisBookUrl}`);
+		console.log(`Scalar API book url set to ${thisBookUrl}`);
 		scalarapi.setBook(thisBookUrl);
 	} else {
 		console.log("Scalar API book url - default book");
