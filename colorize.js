@@ -94,7 +94,7 @@ $( document ).ready( function() {
 		promise.then(function(data){
 			console.log("inside process promise");
 			colorized = data;
-			$(".body_copy").html(colorized);
+			$( "span[property='sioc:content']" ).html(colorized);
 			console.log("Data colorized.")
 		})
 	}
