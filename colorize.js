@@ -71,9 +71,10 @@ $( document ).ready( function() {
 	}
 
 	function handleSuccess() {
-		console.log("Node:");
-		console.log(node)
+		console.log(thisPageSlug);
 		var node = scalarapi.getNode( thisPageSlug );
+		console.log("Node:");
+		console.log(node);
 		var content = node.versions[0].content;
 		var promise = processHtml(content);
 		var colorized;
