@@ -70,12 +70,24 @@ $( document ).ready( function() {
 		return(output_html);
 	}
 
+	async function getScalarNode(nodeSlug){
+		const node = await scalarapi.getNode(nodeSlug);
+		console.log("Got Scalar node");
+		return(node);
+	}
+
 	function handleSuccess() {
 		console.log(thisPageSlug);
-		var node = scalarapi.getNode( thisPageSlug );
-		console.log("Node:");
-		console.log(node);
-		var content = node.versions[0].content;
+		// var node = scalarapi.getNode( thisPageSlug );
+		var node, content;
+		var node_promise = getScalarNode(thisPageSlug);
+		node_promise.then(function(data){
+			node = data;
+			console.log("Node:");
+			console.log(node);
+			content = node.versions[0].content;
+		}
+		// var content = node.versions[0].content;
 		var promise = processHtml(content);
 		var colorized;
 		promise.then(function(data){
