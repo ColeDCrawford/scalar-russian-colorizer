@@ -83,14 +83,16 @@ $( document ).ready( function() {
 		var node_promise = getScalarNode(thisPageSlug);
 		node_promise.then(function(data){
 			node = data;
+			console.log("inside node_promise");
 			console.log("Node:");
 			console.log(node);
 			content = node.versions[0].content;
-		}
+		});
 		// var content = node.versions[0].content;
 		var promise = processHtml(content);
 		var colorized;
 		promise.then(function(data){
+			console.log("inside process promise");
 			colorized = data;
 			$(".body_copy").html(colorized);
 			console.log("Data colorized.")
