@@ -71,7 +71,8 @@ $( document ).ready( function() {
 	}
 
 	function handleSuccess() {
-		console.log("Node loaded.")
+		console.log("Node:");
+		console.log(node)
 		var node = scalarapi.getNode( thisPageSlug );
 		var content = node.versions[0].content;
 		var promise = processHtml(content);
