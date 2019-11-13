@@ -72,9 +72,10 @@ $( document ).ready( function() {
 		}
 
 		async function getScalarNode(nodeSlug){
-			const node = await scalarapi.getNode(nodeSlug);
+			const data = await scalarapi.getNode(nodeSlug);
 			console.log("Got Scalar node");
-			return(node);
+			console.log(data);
+			return(data);
 		}
 
 		function handleSuccess() {
