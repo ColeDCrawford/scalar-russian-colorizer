@@ -45,18 +45,30 @@ function copy() {
 
 $( document ).ready( function() {
 	$('body').on('pageLoadComplete',function() {
-		var thisBookUrl = window.location.href;
-		var thisPageSlug = window.location.pathname.split("/").pop();
-		console.log(thisBookUrl);
-		console.log(thisPageSlug);
 
-		if(thisBookUrl.includes("scalar.fas.harvard.edu")){
-			console.log(`Scalar API book url set to ${thisBookUrl}`);
+		new Promise(function(resolve, reject)){
+			console.log("1");
+			let bookUrl = window.location.href;
+			var pageSlug = window.location.pathname.split("/").pop();
 			scalarapi.setBook(thisBookUrl);
-		} else {
-			console.log("Scalar API book url - default book");
-			scalarapi.setBook( "https://scalar.fas.harvard.edu/cole---test-book" );
-		}
+		}.then(function(result){
+			console.log("2");
+			return new Promise((resolve, reject) => {
+				scalarapi.loadNode(pageSlug, true, handleSuccess, handleFailure)
+			})
+		})
+		// var thisBookUrl = window.location.href;
+		// var thisPageSlug = window.location.pathname.split("/").pop();
+		// console.log(thisBookUrl);
+		// console.log(thisPageSlug);
+
+		// if(thisBookUrl.includes("scalar.fas.harvard.edu")){
+		// 	console.log(`Scalar API book url set to ${thisBookUrl}`);
+		// 	scalarapi.setBook(thisBookUrl);
+		// } else {
+		// 	console.log("Scalar API book url - default book");
+		// 	scalarapi.setBook( "https://scalar.fas.harvard.edu/cole---test-book" );
+		// }
 
 		// if ( scalarapi.loadNode( "russian-test-2", true, handleSuccess, handleFailure) == "loaded" ) {
 		// 	// handleSuccess();
