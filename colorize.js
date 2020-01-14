@@ -44,79 +44,173 @@ function copy() {
 }
 
 $( document ).ready( function() {
-	$('body').on('pageLoadComplete',function() {
+	// $('body').on('pageLoadComplete',function() {
 
-		new Promise(function(resolve, reject)){
-			console.log("1");
-			let bookUrl = window.location.href;
-			var pageSlug = window.location.pathname.split("/").pop();
-			scalarapi.setBook(thisBookUrl);
-		}.then(function(result){
-			console.log("2");
-			return new Promise((resolve, reject) => {
-				scalarapi.loadNode(pageSlug, true, handleSuccess, handleFailure)
-			})
-		})
-		// var thisBookUrl = window.location.href;
-		// var thisPageSlug = window.location.pathname.split("/").pop();
-		// console.log(thisBookUrl);
-		// console.log(thisPageSlug);
+	// function setBook(){
+	// 	console.log("SET BOOK");
+	// 	let bookconfig = {
+	// 		bookUrl: window.location.href,
+	// 		pageSlug: window.location.pathname.split("/").pop(),
+	// 	}
+	// 	// var bookUrl = window.location.href;
+	// 	// var pageSlug = window.location.pathname.split("/").pop();
+	// 	scalarapi.setBook(bookconfig.bookUrl);
+	// 	return Promise.resolve(bookconfig);
+	// }
+	//
+	// function loadNode(config){
+	// 	console.log("LOAD NODE");
+	// 	console.log(config);
+	// 	scalarapi.loadNode(config.pageSlug, true, handleSuccess, handleFailure);
+	// }
 
-		// if(thisBookUrl.includes("scalar.fas.harvard.edu")){
-		// 	console.log(`Scalar API book url set to ${thisBookUrl}`);
-		// 	scalarapi.setBook(thisBookUrl);
-		// } else {
-		// 	console.log("Scalar API book url - default book");
-		// 	scalarapi.setBook( "https://scalar.fas.harvard.edu/cole---test-book" );
-		// }
+	// function main(){
+	// 	console.log("main");
+	// 	setBook()
+	// 		.then(loadNode())
+	// 	// let q = setBook();
+	// 	// console.log(q);
+	// }
+	// main();
 
-		// if ( scalarapi.loadNode( "russian-test-2", true, handleSuccess, handleFailure) == "loaded" ) {
-		// 	// handleSuccess();
-		// };
 
-		if ( scalarapi.loadNode( thisPageSlug, true, handleSuccess, handleFailure) == "loaded" ) {
+
+		// new Promise(function(resolve, reject){
+		// 	console.log("1");
+		// 	let bookUrl = window.location.href;
+		// 	var pageSlug = window.location.pathname.split("/").pop();
+		// 	scalarapi.setBook(bookUrl);
+		// }).then(function(result){
+		// 	console.log("2");
+		// 	return new Promise((resolve, reject) => {
+		// 		scalarapi.loadNode(pageSlug, true, handleSuccess, handleFailure)
+		// 	})
+		// })
+		var bookUrl = window.location.href;
+		var pageSlug = window.location.pathname.split("/").pop();
+		console.log(bookUrl);
+		console.log(pageSlug);
+
+		if(bookUrl.includes("scalar.fas.harvard.edu")){
+			console.log(`Scalar API book url set to ${bookUrl}`);
+			scalarapi.setBook(bookUrl);
+		} else {
+			console.log("Scalar API book url - default book and page");
+			pageSlug = "russian-test-2"
+			scalarapi.setBook( "https://scalar.fas.harvard.edu/cole---test-book" );
+		}
+
+		if ( scalarapi.loadNode( pageSlug, true, handleSuccess, handleFailure) == "loaded" ) {
 			// handleSuccess();
 		};
 
-		async function processHtml(content){
-			const output_html = await colorizehtml(content);
-			return(output_html);
-		}
+		// function handleSuccess(){
+		// 	console.log("success");
+		// 	getScalarNode(pageSlug)
+		// 		.then(processHtml())
+		// 		.then(swapHtml())
+		// }
 
-		async function getScalarNode(nodeSlug){
-			const data = await scalarapi.getNode(nodeSlug);
+		function getScalarNode(nodeSlug, callback){
+			console.log("getting scalar node");
+			const node = scalarapi.getNode(pageSlug);
 			console.log("Got Scalar node");
-			console.log(data);
-			return(data);
+			console.log(node);
+			// let content = node.versions[0].content;
+      let content = node.current.content;
+			callback(content);
 		}
 
-		function handleSuccess() {
-			console.log(thisPageSlug);
-			// var node = scalarapi.getNode( thisPageSlug );
-			var node, content;
-			var node_promise = getScalarNode(thisPageSlug);
-			node_promise.then(function(data){
-				node = data;
-				console.log("inside node_promise");
-				console.log("Node:");
-				console.log(node);
-				content = node.versions[0].content;
-			});
-			// var content = node.versions[0].content;
-			var promise = processHtml(content);
-			var colorized;
-			promise.then(function(data){
-				console.log("inside process promise");
-				colorized = data;
-				$( "span[property='sioc:content']" ).html(colorized);
-				console.log("Data colorized.")
+		function processHtml(content, callback){
+			console.log("process html");
+			const output_html = colorizehtml(content).then(function(response){
+				console.log("colorized");
+        console.log(response);
+				$( "span[property='sioc:content']" ).html(response);
+      });
+		}
+
+		// function swapHtml(html){
+		// 	console.log("swap");
+		// 	console.log(html);
+		// 	$("article.page" > "span[property='sioc:content']").html(html);
+		// }
+
+
+		function handleSuccess(){
+			getScalarNode(pageSlug, function(data){
+				console.log("DATA");
+				console.log(data);
+				//processHtml(data, swapHtml);
+				processHtml(data);
 			})
+			//getScalarNode(pageSlug, processHtml);
+			// Get Scalar Node - return content
+			// Colorify the content
+			// Swap the HTML
+			// return new Promise(function(resolve, reject){
+			// 	const node = await scalarapi.getNode(pageSlug);
+			// })
+
 		}
 
+		// if ( scalarapi.loadNode( pageSlug, true, handleSuccess, handleFailure) == "loaded" ) {
+		// 	// handleSuccess();
+		// };
+
+		// async function processHtml(content){
+		// 	console.log("process html");
+		// 	const output_html = await colorizehtml(content);
+		// 	console.log("HHH")
+		// 	console.log(output_html);
+		// 	return(output_html);
+		// }
+		//
+		// async function swapHtml(html){
+		// 	console.log("swap");
+		// 	console.log(html);
+		// }
+		//
+		// async function getScalarNode(nodeSlug){
+		// 	console.log("getting scalar node");
+		// 	const node = await scalarapi.getNode(pageSlug);
+		// 	console.log("Got Scalar node");
+		// 	console.log(node);
+		// 	// let content = node.versions[0].content;
+    //   let content = node.current.content;
+		// 	return(content);
+		// }
+
+		// function handleSuccess() {
+		// 	console.log(pageSlug);
+		// 	// var node = scalarapi.getNode( thisPageSlug );
+		// 	var node, content;
+		// 	var node_promise = getScalarNode(pageSlug);
+		// 	node_promise.then(function(data){
+		// 		node = data;
+		// 		console.log("inside node_promise");
+		// 		console.log("Node:");
+		// 		console.log(node);
+		// 		content = node.versions[0].content;
+		// 	});
+		// 	// var content = node.versions[0].content;
+		// 	var promise = processHtml(content);
+		// 	console.log(promise);
+		// 	var colorized;
+		// 	promise.then(function(data){
+		// 		console.log("data");
+		// 		console.log(data);
+		// 		console.log("inside process promise");
+		// 		colorized = data;
+		// 		$( "span[property='sioc:content']" ).html(colorized);
+		// 		console.log("Data colorized.")
+		// 	})
+		// }
+		//
 		function handleFailure() {
 			console.log("The node could not be loaded. Colorization failed.")
 		}
-	});
+	// });
 });
 
 })(window, jQuery);
