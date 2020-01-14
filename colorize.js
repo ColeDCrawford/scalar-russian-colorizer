@@ -114,11 +114,14 @@ $( document ).ready( function() {
 		function getScalarNode(nodeSlug, callback){
 			console.log("getting scalar node");
 			const node = scalarapi.getNode(pageSlug);
-			console.log("Got Scalar node");
-			console.log(node);
-			// let content = node.versions[0].content;
-      let content = node.current.content;
-			callback(content);
+
+			setTimeout(function(){
+				console.log("Got Scalar node");
+				console.log(node);
+				// let content = node.versions[0].content;
+	      let content = node.current.content;
+				callback(content);
+			}, 500);
 		}
 
 		function processHtml(content, callback){
