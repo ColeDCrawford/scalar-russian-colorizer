@@ -96,8 +96,10 @@ $( document ).ready( function() {
 			scalarapi.setBook(bookUrl);
 		} else {
 			console.log("Scalar API book url - default book and page");
-			pageSlug = "russian-test-2"
-			scalarapi.setBook( "https://scalar.fas.harvard.edu/cole---test-book" );
+			// pageSlug = "russian-test-2"
+			// scalarapi.setBook( "https://scalar.fas.harvard.edu/cole---test-book" );
+			scalarapi.setBook("https://scalar.fas.harvard.edu/foundationsofrussian");
+			pageSlug = "cole---test-page";
 		}
 
 		if ( scalarapi.loadNode( pageSlug, true, handleSuccess, handleFailure) == "loaded" ) {
@@ -121,7 +123,7 @@ $( document ).ready( function() {
 				// let content = node.versions[0].content;
 	      let content = node.current.content;
 				callback(content);
-			}, 500);
+			}, 1000);
 		}
 
 		function processHtml(content, callback){
